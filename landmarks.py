@@ -9,6 +9,7 @@ p = "models/shape_predictor_68_face_landmarks.dat"
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(p)
 
+# i love arth
 # capture video from mac webcame
 cap = cv2.VideoCapture(0)
 
