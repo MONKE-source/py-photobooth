@@ -13,7 +13,7 @@ predictor = dlib.shape_predictor(p)
 sunglasses = cv2.imread("props/heart2.png")
 # cv2.imshow("Test", sunglasses)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while True:
     # Getting out image by webcam
@@ -56,17 +56,26 @@ while True:
             left_eye[0] : left_eye[0] + sun_width,
         ]
 
-        # applies the mask
-        # overlays the sunglasses
-        eye_area_no_eyes = cv2.bitwise_and(eye_area, eye_area, mask=sun_mask)
-        final_eyes = cv2.add(eye_area_no_eyes, sun_filter)
+        # Debug prints to check dimensions
+        print(f"sun_filter shape: {sun_filter.shape}")
+        print(f"sun_mask shape: {sun_mask.shape}")
+        print(f"eye_area shape: {eye_area.shape}")
 
-        # correctly blends the image
-        image[
-            bottom_eye[1] : bottom_eye[1] + sun_height,
-            left_eye[0] : left_eye[0] + sun_width,
-        ] = final_eyes
+        # Check if dimensions match before applying the mask
+        if eye_area.shape[0] == sun_height and eye_area.shape[1] == sun_width:
+            # applies the mask
+            # overlays the sunglasses
+            eye_area_no_eyes = cv2.bitwise_and(eye_area, eye_area, mask=sun_mask)
+            final_eyes = cv2.add(eye_area_no_eyes, sun_filter)
 
+            # correctly blends the image
+            image[
+                bottom_eye[1] : bottom_eye[1] + sun_height,
+                left_eye[0] : left_eye[0] + sun_width,
+            ] = final_eyes
+        else:
+            print("Dimension mismatch, skipping overlay")
+            
     """
         # Draw on our image, all the finded cordinate points (x,y) 
         for (x, y) in shape:

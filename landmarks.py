@@ -11,7 +11,7 @@ predictor = dlib.shape_predictor(p)
 
 # i love arth
 # capture video from mac webcame
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while True:
     # Read a frame from the video provided
