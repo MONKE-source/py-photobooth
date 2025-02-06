@@ -2,7 +2,7 @@
 
 
 mini mini github instructions/tutorial for zhe hao 
-1.git add . --> stages all the files, can specify file instead of writing . 
+1. git add . --> stages all the files, can specify file instead of writing . 
 2. git commit -m "commit message" --> commits the files that were added
 3. git push origin main --> pushes commits to the repository 
 
