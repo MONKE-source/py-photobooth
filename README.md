@@ -1,6 +1,11 @@
 # py-photobooth
 
-mini mini github instructions/tutorial for zhe hao
+## File directory 
+text_on_image.py --> creates the speech bubble with the text 
+
+
+## mini mini github instructions/tutorial for zhe hao by arth
+not all inclusive, please learn on ur own 
 
 1. git add . --> stages all the files, can specify file instead of writing
 2. git commit -m "commit message" --> commits the files that were added
