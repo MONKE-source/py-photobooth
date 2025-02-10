@@ -14,6 +14,7 @@ while True:
     if option == 6:
         text = input("Enter the text you would like to show on the speech bubble: ")
         text_on_image(text)
+        # path for the image is speech2.png, will create in the root of this folder
 
     if option == 0:
         break
