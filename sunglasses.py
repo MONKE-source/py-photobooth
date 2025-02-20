@@ -1,3 +1,5 @@
+# NOTE: This is OLD version of the project file, use campera.py instead
+
 # copied from gc
 # added comments for my understanding
 from imutils import face_utils
