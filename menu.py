@@ -30,6 +30,9 @@ print(
     [9] Green Mask 
     [10] Red Mask 
     [11] Yellow Mask 
+    [12] Visitor's Mask
+    [13] Princess, Complimentary Masquerade Mask 1
+    [14] Prayer, Complimentary Masquerade Mask 2
     Enter 0 to start the photobooth! 
     Enter QUIT to quit"""
 )
@@ -46,7 +49,26 @@ props = [
     "props/green_mask.png",
     "props/red_mask.png",
     "props/yellow_mask.png",
+    "props/visitor.png",
+    "props/princess.png",
+    "props/prayer.png",
 ]  # populate this with the image later
+lore = [
+    "A precious piece of art, glasses made by black house representatives of SSTudents to showcase their brilliance and bravery.",
+    "A precious piece of art, glasses made by blue house representatives of SSTudents to showcase their valour and victories.",
+    "A precious piece of art, glasses made by green house representatives of SSTudents to showcase their might and majesty.",
+    "A precious piece of art, glasses made by red house representatives of SSTudents to showcase their fearlessness and firey heart.",
+    "A precious piece of art, glasses made by yellow house representatives of SSTudents to showcase their strength and spirit.",
+    "A right to speak.", # not shown
+    "The mysterious masquerade opens to SST! A masquerade mask to represent the black house, a symbol of brilliance and bravery.",
+    "The mysterious masquerade opens to SST! A masquerade mask to represent the blue house, a symbol of valour and victories.",
+    "The mysterious masquerade opens to SST! A masquerade mask to represent the green house, a symbol of might and majesty.",
+    "The mysterious masquerade opens to SST! A masquerade mask to represent the red house, a symbol of fearlessness and firey heart.",
+    "The mysterious masquerade opens to SST! A masquerade mask to represent the yellow house, a symbol of strength and spirit.",
+    "The mysterious masquerade opens to SST! A masquerade mask to represent all those who visit the masquerade.",
+    "The mysterious masquerade opens to SST! A masquerade mask only given to the most beautiful, the most noble, the most worthy of the masquerade's Lady.",
+    "The mysterious masquerade opens to SST! A masquerade mask only given to the most forbearant, the most gentle, the most caring of the masquerade's cleric."
+]
 chosen_type = ""
 chosen_prop = ""
 
@@ -67,10 +89,22 @@ while True:
         chosen_prop = props[int(option) - 1]
         chosen_type = "glasses"
         print(f"Success! Your prop is now a pair of glasses!")
-    elif option in ["7", "8", "9", "10", "11"]: # glasses prop
+        print(lore[int(option) - 1])
+    elif option in ["7", "8", "9", "10", "11", "12"]: # glasses prop
         chosen_prop = props[int(option) - 1]
         chosen_type = "masks"
         print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
+        print(lore[int(option) - 1])
+    elif option == "13":
+        chosen_prop = props[int(option) - 1]
+        chosen_type = "princess"
+        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
+        print(lore[int(option) - 1])
+    elif option == "14":
+        chosen_prop = props[int(option) - 1]
+        chosen_type = "prayer"
+        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
+        print(lore[int(option) - 1])
     elif option == "QUIT": break
     else: print("Invalid input, please try again.")
 

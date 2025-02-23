@@ -5,7 +5,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 def text_on_image(text):
-    if len(text) > 220: return False
+    if len(text) > 180: return False
     else:
         img = Image.open("props/bubble.png")
         text_arr = text.split(" ")

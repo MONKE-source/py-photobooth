@@ -58,7 +58,7 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         left_eye = landmarks[33]
                         right_eye = landmarks[263]
                         nose_bridge = landmarks[6]
-                    elif prop_type == "masks":
+                    elif prop_type == "masks" or prop_type == "princess" or prop_type == "prayer":
                         left_eye = landmarks[33]
                         right_eye = landmarks[263]
                         left_cheek = landmarks[234]
@@ -75,7 +75,7 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                             cv2.circle(frame, (int(left_eye[0]), int(left_eye[1])), 2, (0, 255, 0), -1,)
                             cv2.circle(frame, (int(right_eye[0]), int(right_eye[1])), 2, (0, 0, 255), -1,)
                             cv2.circle(frame, (int(nose_bridge[0]), int(nose_bridge[1])), 2, (255, 0, 0), -1,)
-                        if (prop_type == "masks" and left_cheek is not None and right_cheek is not None):
+                        if ((prop_type == "masks" or prop_type == "princess" or prop_type == "prayer") and left_cheek is not None and right_cheek is not None):
                             cv2.circle(frame, (int(left_cheek[0]), int(left_cheek[1])), 2, (255, 255, 0), -1,)
                             cv2.circle(frame, (int(right_cheek[0]), int(right_cheek[1])), 2, (255, 0, 255), -1,)
                         if (prop_type == "speech" and mouth_left is not None and mouth_right is not None and mouth_bottom is not None):
@@ -88,9 +88,11 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         eye_distance = np.linalg.norm(left_eye - right_eye)
                         prop_width = int(eye_distance * 1.5)
                         prop_height = int(prop_width * (image.shape[0] / image.shape[1]))
-                    elif (prop_type == "masks" and left_cheek is not None and right_cheek is not None):
+                    elif ((prop_type == "masks" or prop_type == "princess" or prop_type == "prayer")and left_cheek is not None and right_cheek is not None):
                         cheek_distance = np.linalg.norm(left_cheek - right_cheek)
-                        prop_width = int(cheek_distance * 1.2)
+                        if prop_type == "princess": prop_width = int(cheek_distance * 1.8)  # Increase the scaling factor for princess
+                        elif prop_type == "prayer": prop_width = int(cheek_distance * 2.5)  # Increase the scaling factor for prayer to cover the entire face
+                        else: prop_width = int(cheek_distance * 1.2)
                         prop_height = int(prop_width * (image.shape[0] / image.shape[1]))
                     elif (prop_type == "speech" and mouth_left is not None and mouth_right is not None):
                         mouth_width = np.linalg.norm(mouth_left - mouth_right)
@@ -98,7 +100,7 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         prop_height = int(prop_width * (image.shape[0] / image.shape[1]))
 
                     # Overlay the prop on the frame
-                    if prop_type in ["glasses", "masks", "speech"]:
+                    if prop_type in ["glasses", "masks", "speech", "princess", "prayer"]:
                         # resize prop
                         prop_resized = cv2.resize(image, (prop_width, prop_height))
 
@@ -106,9 +108,8 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         prop_center = (prop_width // 2, prop_height // 2)
 
                         # Calculate the angle between left and right in radians
-                        if prop_type == "glasses" or prop_type == "masks":
-                            angle_radians = -1 * np.arctan2(right_eye[1] - left_eye[1], right_eye[0] - left_eye[0])
-                        elif prop_type == "speech": angle_radians = 0
+                        if prop_type == "speech": angle_radians = 0
+                        else: angle_radians = -1 * np.arctan2(right_eye[1] - left_eye[1], right_eye[0] - left_eye[0])
 
                         # Convert to degrees
                         angle_degrees = np.degrees(angle_radians)
@@ -128,7 +129,7 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         if prop_type == "glasses":
                             x_offset = int(nose_bridge[0] - prop_width / 2)
                             y_offset = int(nose_bridge[1] - prop_height / 2)
-                        elif prop_type == "masks":
+                        elif prop_type == "masks" or prop_type == "princess" or prop_type == "prayer":
                             x_offset = int(nose_bridge[0] - prop_width / 2)
                             y_offset = int(nose_bridge[1] - prop_height / 1.9)
                         elif prop_type == "speech":
