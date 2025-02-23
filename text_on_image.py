@@ -4,6 +4,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+
 def text_on_image(text):
     img = Image.open("props/bubble.png")
     text_arr = text.split(" ")
@@ -49,9 +50,6 @@ def text_on_image(text):
         font=myFont,
         fill=(0, 0, 0),
     )
-
-    # Display edited image
-    img.show()
 
     # Save the edited image
     img.save("props/speech2.png")
