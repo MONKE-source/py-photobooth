@@ -3,12 +3,12 @@ from text_on_image import text_on_image
 from camera import photobooth
 
 print("Welcome to the Photobooth!")
-# camera for cv2.VideoCapture bc i have obs on my macbook sorry gang
 
+# camera for cv2.VideoCapture bc i have obs on my macbook sorry gang
 while True:
     try:
         camera = int(input("Which camera would you like to use? 0 for default, 1 for external: "))
-        if camera not in [0, 1]: raise Value-Error
+        if camera not in [0, 1]: raise ValueError
         else: break
     except ValueError:
         print("Invalid input. Please input 0 or 1.") 

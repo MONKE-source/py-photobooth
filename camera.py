@@ -94,7 +94,7 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                         prop_height = int(prop_width * (image.shape[0] / image.shape[1]))
                     elif (prop_type == "speech" and mouth_left is not None and mouth_right is not None):
                         mouth_width = np.linalg.norm(mouth_left - mouth_right)
-                        prop_width = int(mouth_width * 2)
+                        prop_width = int(mouth_width * 4)
                         prop_height = int(prop_width * (image.shape[0] / image.shape[1]))
 
                     # Overlay the prop on the frame

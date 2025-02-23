@@ -4,7 +4,6 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-
 def text_on_image(text):
     img = Image.open("props/bubble.png")
     text_arr = text.split(" ")
@@ -44,7 +43,8 @@ def text_on_image(text):
     myFont = ImageFont.truetype("others/Prototype.ttf", 300)
 
     # Calculate the width of the text and adjust the x-coordinate to center it
-    text_width, _ = I1.textsize(formatted_text, font=myFont)
+    text_bbox = I1.textbbox((0, 0), formatted_text, font=myFont)
+    text_width = text_bbox[2] - text_bbox[0]
     img_width = img.width
     x_coordinate = (img_width - text_width) // 2
 
