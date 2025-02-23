@@ -39,13 +39,23 @@ def text_on_image(text):
     # Call draw Method to add 2D graphics in an image
     I1 = ImageDraw.Draw(img)
 
-    # Define the font and size
-    myFont = ImageFont.truetype("others/Prototype.ttf", 300)
+    # Define the initial font and size
+    font_path = "others/Prototype.ttf"
+    font_size = 300
+    myFont = ImageFont.truetype(font_path, font_size)
 
     # Calculate the width of the text and adjust the x-coordinate to center it
     text_bbox = I1.textbbox((0, 0), formatted_text, font=myFont)
     text_width = text_bbox[2] - text_bbox[0]
     img_width = img.width
+
+    # Adjust font size if text overflows the image width
+    while text_width > img_width - 20:  # 20 pixels padding
+        font_size -= 55
+        myFont = ImageFont.truetype(font_path, font_size)
+        text_bbox = I1.textbbox((0, 0), formatted_text, font=myFont)
+        text_width = text_bbox[2] - text_bbox[0]
+
     x_coordinate = (img_width - text_width) // 2
 
     # Add Text to an image
