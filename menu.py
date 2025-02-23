@@ -58,10 +58,11 @@ while True:
         else: print("Please choose a prop first.")
     if option == "6": # speec bubble function
         text = input("Enter the text you would like to show on the speech bubble: ")
-        text_on_image(text)
-        chosen_prop = "props/speech2.png"
-        chosen_type = "speech"
-        print(f"Success! Your prop is now a speech bubble with {text} on it.")
+        if text_on_image(text):
+            chosen_prop = "props/speech2.png"
+            chosen_type = "speech"
+            print(f"Success! Your prop is now a speech bubble with {text} on it.")
+        else: print(f"Your text is {len(text) - 170} characters too long! Please try again.")
     elif option in ["1", "2", "3", "4", "5"]: # glasses prop
         chosen_prop = props[int(option) - 1]
         chosen_type = "glasses"
