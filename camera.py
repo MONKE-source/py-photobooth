@@ -13,7 +13,7 @@ except RuntimeError as e:
     exit()
 
 
-def photobooth(chosen_prop):
+def photobooth_glasses(chosen_prop):
     # Open the webcam
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -92,9 +92,12 @@ def photobooth(chosen_prop):
                 borderValue=(0, 0, 0, 0),
             )
 
-            # Calculate the position to center the glasses
-            x_offset = int(landmarks[27][0] - glasses_width / 2)
-            y_offset = int(landmarks[27][1] - glasses_height / 2)
+            if chosen_prop == "props/speech2.png":
+                x_offset = int(landmarks[54][0] - glasses_width / 2 + 40)
+                y_offset = int(landmarks[54][1] - glasses_height / 2 - 40)
+            else:
+                x_offset = int(landmarks[27][0] - glasses_width / 2)
+                y_offset = int(landmarks[27][1] - glasses_height / 2)
 
             # Ensure the overlay is within the frame boundaries
             y1, y2 = max(0, y_offset), min(frame.shape[0], y_offset + glasses_height)
