@@ -27,7 +27,7 @@ def text_on_image(text):
     formatted_text += current_line.strip()
 
     # variables for ensuring the lining part is correct
-    og_y = 1300  # please change formatting according, do not make go under 300 or it will be too little
+    og_y = 750  # Adjusted to move the text up
     num_line_breaks = formatted_text.count("\n")
 
     # move the text accordingly
@@ -43,9 +43,14 @@ def text_on_image(text):
     # Define the font and size
     myFont = ImageFont.truetype("others/Prototype.ttf", 300)
 
+    # Calculate the width of the text and adjust the x-coordinate to center it
+    text_width, _ = I1.textsize(formatted_text, font=myFont)
+    img_width = img.width
+    x_coordinate = (img_width - text_width) // 2
+
     # Add Text to an image
     I1.text(
-        (1900, og_y),
+        (x_coordinate, og_y),
         formatted_text,
         font=myFont,
         fill=(0, 0, 0),
