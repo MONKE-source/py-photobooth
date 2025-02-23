@@ -8,7 +8,7 @@ print("Welcome to the Photobooth!")
 while True:
     try:
         camera = int(input("Which camera would you like to use? 0 for default, 1 for external: "))
-        if camera not in [0, 1]: raise ValueError
+        if camera not in [0, 1]: raise Value-Error
         else: break
     except ValueError:
         print("Invalid input. Please input 0 or 1.") 
