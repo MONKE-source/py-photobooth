@@ -4,14 +4,27 @@ import numpy as np
 
 # Load the pre-trained face detector and landmark predictor
 face_detector = dlib.get_frontal_face_detector()
-landmark_predictor = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
+try:
+    landmark_predictor = dlib.shape_predictor(
+        "models/shape_predictor_68_face_landmarks.dat"
+    )
+except RuntimeError as e:
+    print(f"Error loading landmark predictor: {e}")
+    exit()
+
 
 def photobooth(chosen_prop):
     # Open the webcam
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open webcam.")
+        return
 
     while True:
         ret, frame = cap.read()
+        if not ret:
+            print("Error: Failed to capture image.")
+            break
 
         # Resize the frame to reduce processing time
         frame = cv2.resize(frame, (854, 480))
@@ -27,23 +40,28 @@ def photobooth(chosen_prop):
             landmarks = landmark_predictor(gray, face)
 
             # Convert landmarks to NumPy array for easier indexing
-            landmarks = np.array([(landmarks.part(i).x, landmarks.part(i).y) for i in range(68)])
-
-            cv2.circle(frame, landmarks[36], 2, (0, 255, 0), -1)
-            cv2.circle(frame, landmarks[45], 2, (0, 0, 255), -1)
+            landmarks = np.array(
+                [(landmarks.part(i).x, landmarks.part(i).y) for i in range(68)]
+            )
 
             # 2D image points
-            image_points = np.array([
-                (landmarks[30][0], landmarks[30][1]),     # Nose tip
-                (landmarks[8][0], landmarks[8][1]),       # Chin
-                (landmarks[36][0], landmarks[36][1]),     # Left eye left corner
-                (landmarks[45][0], landmarks[45][1]),     # Right eye right corner
-                (landmarks[48][0], landmarks[48][1]),     # Left Mouth corner
-                (landmarks[54][0], landmarks[54][1])      # Right Mouth corner
-            ], dtype=np.float64)
+            image_points = np.array(
+                [
+                    (landmarks[30][0], landmarks[30][1]),  # Nose tip
+                    (landmarks[8][0], landmarks[8][1]),  # Chin
+                    (landmarks[36][0], landmarks[36][1]),  # Left eye left corner
+                    (landmarks[45][0], landmarks[45][1]),  # Right eye right corner
+                    (landmarks[48][0], landmarks[48][1]),  # Left Mouth corner
+                    (landmarks[54][0], landmarks[54][1]),  # Right Mouth corner
+                ],
+                dtype=np.float64,
+            )
 
             # Load the glasses image with an alpha channel (transparency)
             image = cv2.imread(chosen_prop, cv2.IMREAD_UNCHANGED)
+            if image is None:
+                print(f"Error: Could not load image {chosen_prop}")
+                continue
 
             # Calculate the position of the glasses
             glasses_width = int(np.linalg.norm(landmarks[36] - landmarks[45]) * 1.5)
@@ -53,7 +71,9 @@ def photobooth(chosen_prop):
             glasses_resized = cv2.resize(image, (glasses_width, glasses_height))
 
             # Calculate the angle between landmarks[36] and landmarks[45] in radians
-            angle_radians = -1 * np.arctan2(landmarks[45][1] - landmarks[36][1], landmarks[45][0] - landmarks[36][0])
+            angle_radians = -1 * np.arctan2(
+                landmarks[45][1] - landmarks[36][1], landmarks[45][0] - landmarks[36][0]
+            )
 
             # Convert the angle from radians to degrees
             angle_degrees = np.degrees(angle_radians)
@@ -63,7 +83,14 @@ def photobooth(chosen_prop):
 
             # Rotate the glasses based on the angle
             M = cv2.getRotationMatrix2D(glasses_center, angle_degrees, 1)
-            rotated_overlay = cv2.warpAffine(glasses_resized, M, (glasses_width, glasses_height), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+            rotated_overlay = cv2.warpAffine(
+                glasses_resized,
+                M,
+                (glasses_width, glasses_height),
+                flags=cv2.INTER_LINEAR,
+                borderMode=cv2.BORDER_CONSTANT,
+                borderValue=(0, 0, 0, 0),
+            )
 
             # Calculate the position to center the glasses
             x_offset = int(landmarks[27][0] - glasses_width / 2)
@@ -75,9 +102,13 @@ def photobooth(chosen_prop):
 
             # Adjust the overlay region if it goes out of bounds
             overlay_y1 = max(0, -y_offset)
-            overlay_y2 = glasses_height - max(0, (y_offset + glasses_height) - frame.shape[0])
+            overlay_y2 = glasses_height - max(
+                0, (y_offset + glasses_height) - frame.shape[0]
+            )
             overlay_x1 = max(0, -x_offset)
-            overlay_x2 = glasses_width - max(0, (x_offset + glasses_width) - frame.shape[1])
+            overlay_x2 = glasses_width - max(
+                0, (x_offset + glasses_width) - frame.shape[1]
+            )
 
             # Calculate the regions of interest
             overlay_roi = rotated_overlay[overlay_y1:overlay_y2, overlay_x1:overlay_x2]
@@ -91,16 +122,19 @@ def photobooth(chosen_prop):
 
                 # Blend the overlay with the frame
                 for c in range(3):
-                    frame_roi[:, :, c] = (alpha_channel * overlay_roi[:, :, c] + alpha_frame * frame_roi[:, :, c])
+                    frame_roi[:, :, c] = (
+                        alpha_channel * overlay_roi[:, :, c]
+                        + alpha_frame * frame_roi[:, :, c]
+                    )
 
                 # Place the blended ROI back onto the frame
                 frame[y1:y2, x1:x2] = frame_roi
-            
+
         # Display the frame with the overlay
         cv2.imshow("Glasses Filter", frame)
 
         # Break the loop if 'q' key is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     # Release the webcam and close all windows
