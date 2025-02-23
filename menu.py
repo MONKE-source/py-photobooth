@@ -18,7 +18,20 @@ if debug != "1": debug = 0
 else: debug = 1
 
 print(
-    "Choose one to start with:\n [1] Black Sunglasses \n [2] Blue Sunglasses \n [3] Green Sunglasses \n [4] Red Sunglasses \n [5] Yellow Sunglasses \n [6] Write Text \n [7] Blue Mask \n [8] Red Mask \n [9] Yellow Mask \n Enter 10 to start the photobooth! \n Enter 0 to quit"
+    """Choose one to start with:
+    [1] Black Sunglasses 
+    [2] Blue Sunglasses 
+    [3] Green Sunglasses 
+    [4] Red Sunglasses 
+    [5] Yellow Sunglasses 
+    [6] Write Text for Speech Bubble
+    [7] Black Mask 
+    [8] Blue Mask 
+    [9] Green Mask 
+    [10] Red Mask 
+    [11] Yellow Mask 
+    Enter 0 to start the photobooth! 
+    Enter QUIT to quit"""
 )
 
 props = [
@@ -28,7 +41,9 @@ props = [
     "props/red_glasses.png",
     "props/yellow_glasses.png",
     "props/speech2.png",
+    "props/black_mask.png",
     "props/blue_mask.png",
+    "props/green_mask.png",
     "props/red_mask.png",
     "props/yellow_mask.png",
 ]  # populate this with the image later
@@ -36,22 +51,29 @@ chosen_type = ""
 chosen_prop = ""
 
 while True:
-    option = int(input("Enter your option here: "))
+    option = input("Enter your option here: ")
     print("Loading ... ")
-    if option == 10: # option to activate photobooth()
+    if option == "0": # option to activate photobooth()
         if chosen_prop: break
         else: print("Please choose a prop first.")
-    if option == 6: # speec bubble function
+    if option == "6": # speec bubble function
         text = input("Enter the text you would like to show on the speech bubble: ")
         text_on_image(text)
         chosen_prop = "props/speech2.png"
         chosen_type = "speech"
-    elif option in [1, 2, 3, 4, 5]: # glasses prop
-        chosen_prop = props[option - 1]
+        print(f"Success! Your prop is now a speech bubble with {text} on it.")
+    elif option in ["1", "2", "3", "4", "5"]: # glasses prop
+        chosen_prop = props[int(option) - 1]
         chosen_type = "glasses"
-    elif option in [7, 8, 9]: # glasses prop
-        chosen_prop = props[option - 1]
+        print(f"Success! Your prop is now a pair of glasses!")
+    elif option in ["7", "8", "9", "10", "11"]: # glasses prop
+        chosen_prop = props[int(option) - 1]
         chosen_type = "masks"
-    elif option == 0: break
+        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
+    elif option == "QUIT": break
+    else: print("Invalid input, please try again.")
 
-if option == 10: photobooth(chosen_prop, chosen_type, camera, debug)
+if option == "0": 
+    if chosen_type == "masks": print("Welcome to the masquerade!")
+    else: print("Loading photobooth...")
+    photobooth(chosen_prop, chosen_type, camera, debug)
