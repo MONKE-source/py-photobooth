@@ -5,7 +5,7 @@ import cv2
 
 print("Welcome to the photobooth")
 print(
-    "Choose one to start with:\n [1] Sunglasses 1 \n [2] Sunglasses 2 \n [3] Sunglasses 3 \n [4] Sunglasses 4 \n [5] Sunglasses 5 \n [6] Write Text \n Enter 7 to stat the photobooth! \n Enter 0 to quit"
+    "Choose one to start with:\n [1] Black Sunglasses \n [2] Blue Sunglasses \n [3] Green Sunglasses \n [4] Red Sunglasses \n [5] Yellow Sunglasses \n [6] Write Text \n [7] Blue Mask \n [8] Red Mask \n [9] Yellow Mask \n Enter 10 to start the photobooth! \n Enter 0 to quit"
 )
 
 props = [
@@ -32,6 +32,7 @@ while True:
         text = input("Enter the text you would like to show on the speech bubble: ")
         text_on_image(text)
         chosen_prop = "props/speech2.png"
+        chosen_type = "speech"
         # path for the image is speech2.png, will create in the root of this folder
     elif option in [1, 2, 3, 4, 5, 7, 8, 9]:
         chosen_prop = props[option - 1]
