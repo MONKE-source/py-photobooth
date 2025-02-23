@@ -8,7 +8,7 @@ print(
     "Choose one to start with:\n [1] Sunglasses 1 \n [2] Sunglasses 2 \n [3] Sunglasses 3 \n [4] Sunglasses 4 \n [5] Sunglasses 5 \n [6] Write Text \n Enter 7 to stat the photobooth! \n Enter 0 to quit"
 )
 props = ["props/black_glasses.png",
-         "props/blue_glasses.png",
+         "props/blue_mask.png",
          "props/green_glasses.png",
          "props/red_glasses.png",
          "props/yellow_glasses.png",
