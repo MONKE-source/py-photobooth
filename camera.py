@@ -21,12 +21,20 @@ def photobooth(chosen_prop, prop_type, camera, debug):
     button_size = (100, 40)
     button_text = "Close"
 
+    # Define the capture button position and size
+    capture_button_position = (854 - 110, 10)  # Assuming frame width is 854
+    capture_button_size = (100, 40)
+    capture_button_text = "Capture"
+
     # Mouse callback function
     def mouse_callback(event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN:
             if button_position[0] <= x <= button_position[0] + button_size[0] and button_position[1] <= y <= button_position[1] + button_size[1]:
                 cap.release()
                 cv2.destroyAllWindows()
+            elif capture_button_position[0] <= x <= capture_button_position[0] + capture_button_size[0] and capture_button_position[1] <= y <= capture_button_position[1] + capture_button_size[1]:
+                cv2.imwrite("captured_image.png", frame)
+                print("Image captured to desktop")
 
     # Set the mouse callback function
     cv2.namedWindow("Prop Filter")
@@ -179,7 +187,9 @@ def photobooth(chosen_prop, prop_type, camera, debug):
             # Draw the button on the frame
             cv2.rectangle(frame, button_position, (button_position[0] + button_size[0], button_position[1] + button_size[1]), (0, 0, 255), -1)
             cv2.putText(frame, button_text, (button_position[0] + 10, button_position[1] + 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-            
+            # Draw the capture button on the frame
+            cv2.rectangle(frame, capture_button_position, (capture_button_position[0] + capture_button_size[0], capture_button_position[1] + capture_button_size[1]), (0, 255, 0), -1)
+            cv2.putText(frame, capture_button_text, (capture_button_position[0] + 10, capture_button_position[1] + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             # Debug Mode - Display the FPS counter
             if debug == 1:
                 end = time.time()
