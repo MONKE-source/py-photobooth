@@ -16,6 +16,22 @@ def photobooth(chosen_prop, prop_type, camera, debug):
     # Load the prop image with an alpha channel (transparency)
     image = cv2.imread(chosen_prop, cv2.IMREAD_UNCHANGED)
 
+    # Define the button position and size
+    button_position = (10, 10)
+    button_size = (100, 40)
+    button_text = "Close"
+
+    # Mouse callback function
+    def mouse_callback(event, x, y, flags, param):
+        if event == cv2.EVENT_LBUTTONDOWN:
+            if button_position[0] <= x <= button_position[0] + button_size[0] and button_position[1] <= y <= button_position[1] + button_size[1]:
+                cap.release()
+                cv2.destroyAllWindows()
+
+    # Set the mouse callback function
+    cv2.namedWindow("Prop Filter")
+    cv2.setMouseCallback("Prop Filter", mouse_callback)
+
     # face detection
     with mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5) as face_mesh:
         while cap.isOpened():
@@ -160,6 +176,10 @@ def photobooth(chosen_prop, prop_type, camera, debug):
                             )
                             frame[y1:y2, x1:x2] = frame_roi
 
+            # Draw the button on the frame
+            cv2.rectangle(frame, button_position, (button_position[0] + button_size[0], button_position[1] + button_size[1]), (0, 0, 255), -1)
+            cv2.putText(frame, button_text, (button_position[0] + 10, button_position[1] + 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            
             # Debug Mode - Display the FPS counter
             if debug == 1:
                 end = time.time()
