@@ -1,41 +1,47 @@
-# import functions and librarys here
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
 from text_on_image import text_on_image
 from camera import photobooth
 
-print("Welcome to the Photobooth!")
+def start_photobooth():
+    if chosen_prop:
+        if chosen_type == "masks":
+            messagebox.showinfo("Info", "Welcome to the masquerade!")
+        else:
+            messagebox.showinfo("Info", "Loading photobooth...")
+        photobooth(chosen_prop, chosen_type, camera.get(), debug.get())
+    else:
+        messagebox.showwarning("Warning", "Please choose a prop first.")
 
-# camera for cv2.VideoCapture bc i have obs on my macbook sorry gang
-while True:
-    try:
-        camera = int(input("Which camera would you like to use? 0 for default, 1 for external: "))
-        if camera not in [0, 1]: raise ValueError
-        else: break
-    except ValueError:
-        print("Invalid input. Please input 0 or 1.") 
-# a debug mode that will show FPS counter and landmarks
-debug = input("Do you wish to turn on debug mode? 1 for Yes, any other input else for No: ") 
-if debug != "1": debug = 0
-else: debug = 1
+def choose_prop(option):
+    global chosen_prop, chosen_type
+    if option == "6":
+        text = text_entry.get()
+        if text_on_image(text):
+            chosen_prop = "props/speech2.png"
+            chosen_type = "speech"
+            messagebox.showinfo("Success", f"Your prop is now a speech bubble with {text} on it.")
+        else:
+            messagebox.showerror("Error", f"Your text is {len(text) - 170} characters too long! Please try again.")
+    else:
+        chosen_prop = props[int(option) - 1]
+        chosen_type = types[int(option) - 1]
+        messagebox.showinfo("Success", f"Success! Your prop is now a {chosen_type}!")
+        messagebox.showinfo("Lore", lore[int(option) - 1])
 
-print(
-    """Choose one to start with:
-    [1] Black Sunglasses 
-    [2] Blue Sunglasses 
-    [3] Green Sunglasses 
-    [4] Red Sunglasses 
-    [5] Yellow Sunglasses 
-    [6] Write Text for Speech Bubble
-    [7] Black Mask 
-    [8] Blue Mask 
-    [9] Green Mask 
-    [10] Red Mask 
-    [11] Yellow Mask 
-    [12] Visitor's Mask
-    [13] Princess, Complimentary Masquerade Mask 1
-    [14] Prayer, Complimentary Masquerade Mask 2
-    Enter 0 to start the photobooth! 
-    Enter QUIT to quit"""
-)
+def on_quit():
+    root.destroy()
+
+root = tk.Tk()
+root.title("Photobooth Menu")
+root.geometry("600x1000")
+root.resizable(False, False)
+
+camera = tk.IntVar(value=0)
+debug = tk.IntVar(value=0)
+chosen_prop = ""
+chosen_type = ""
 
 props = [
     "props/black_glasses.png",
@@ -52,14 +58,19 @@ props = [
     "props/visitor.png",
     "props/princess.png",
     "props/prayer.png",
-]  # populate this with the image later
+]
+types = [
+    "glasses", "glasses", "glasses", "glasses", "glasses",
+    "speech", "masks", "masks", "masks", "masks", "masks",
+    "masks", "princess", "prayer"
+]
 lore = [
     "A precious piece of art, glasses made by black house representatives of SSTudents to showcase their brilliance and bravery.",
     "A precious piece of art, glasses made by blue house representatives of SSTudents to showcase their valour and victories.",
     "A precious piece of art, glasses made by green house representatives of SSTudents to showcase their might and majesty.",
     "A precious piece of art, glasses made by red house representatives of SSTudents to showcase their fearlessness and firey heart.",
     "A precious piece of art, glasses made by yellow house representatives of SSTudents to showcase their strength and spirit.",
-    "A right to speak.", # not shown
+    "A right to speak.",
     "The mysterious masquerade opens to SST! A masquerade mask to represent the black house, a symbol of brilliance and bravery.",
     "The mysterious masquerade opens to SST! A masquerade mask to represent the blue house, a symbol of valour and victories.",
     "The mysterious masquerade opens to SST! A masquerade mask to represent the green house, a symbol of might and majesty.",
@@ -69,46 +80,41 @@ lore = [
     "The mysterious masquerade opens to SST! A masquerade mask only given to the most beautiful, the most noble, the most worthy of the masquerade's Lady.",
     "The mysterious masquerade opens to SST! A masquerade mask only given to the most forbearant, the most gentle, the most caring of the masquerade's cleric."
 ]
-chosen_type = ""
-chosen_prop = ""
 
-while True:
-    option = input("Enter your option here: ")
-    print("Loading ... ")
-    if option == "0": # option to activate photobooth()
-        if chosen_prop: break
-        else: print("Please choose a prop first.")
-    if option == "6": # speec bubble function
-        text = input("Enter the text you would like to show on the speech bubble: ")
-        if text_on_image(text):
-            chosen_prop = "props/speech2.png"
-            chosen_type = "speech"
-            print(f"Success! Your prop is now a speech bubble with {text} on it.")
-        else: print(f"Your text is {len(text) - 170} characters too long! Please try again.")
-    elif option in ["1", "2", "3", "4", "5"]: # glasses prop
-        chosen_prop = props[int(option) - 1]
-        chosen_type = "glasses"
-        print(f"Success! Your prop is now a pair of glasses!")
-        print(lore[int(option) - 1])
-    elif option in ["7", "8", "9", "10", "11", "12"]: # glasses prop
-        chosen_prop = props[int(option) - 1]
-        chosen_type = "masks"
-        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
-        print(lore[int(option) - 1])
-    elif option == "13":
-        chosen_prop = props[int(option) - 1]
-        chosen_type = "princess"
-        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
-        print(lore[int(option) - 1])
-    elif option == "14":
-        chosen_prop = props[int(option) - 1]
-        chosen_type = "prayer"
-        print(f"Success! Welcome to the masquerade, enjoy your complimentry masquerade mask!")
-        print(lore[int(option) - 1])
-    elif option == "QUIT": break
-    else: print("Invalid input, please try again.")
+style = ttk.Style()
+style.configure("TButton", font=("Helvetica", 12), padding=1)
+style.configure("TLabel", font=("Helvetica", 14), padding=1)
 
-if option == "0": 
-    if chosen_type == "masks": print("Welcome to the masquerade!")
-    else: print("Loading photobooth...")
-    photobooth(chosen_prop, chosen_type, camera, debug)
+main_frame = ttk.Frame(root, padding="10")
+main_frame.pack(fill="both", expand=True)
+
+ttk.Label(main_frame, text="Welcome to the Photobooth!", font=("Helvetica", 16, "bold")).pack(pady=10)
+
+camera_frame = ttk.LabelFrame(main_frame, text="Camera Selection", padding="10")
+camera_frame.pack(fill="both", expand=True, pady=5)
+ttk.Radiobutton(camera_frame, text="Default", variable=camera, value=0).pack(anchor="w")
+ttk.Radiobutton(camera_frame, text="External", variable=camera, value=1).pack(anchor="w")
+
+debug_frame = ttk.LabelFrame(main_frame, text="Debug Mode", padding="10")
+debug_frame.pack(fill="both", expand=True, pady=5)
+ttk.Checkbutton(debug_frame, text="Enable Debug Mode", variable=debug).pack(anchor="w")
+
+prop_frame = ttk.LabelFrame(main_frame, text="Choose a Prop", padding="10")
+prop_frame.pack(fill="both", expand=True, pady=5)
+options = [
+    "Black Sunglasses", "Blue Sunglasses", "Green Sunglasses", "Red Sunglasses", "Yellow Sunglasses",
+    "Write Text for Speech Bubble", "Black Mask", "Blue Mask", "Green Mask", "Red Mask", "Yellow Mask",
+    "Visitor's Mask", "Princess, Complimentary Masquerade Mask 1", "Prayer, Complimentary Masquerade Mask 2"
+]
+for i, option in enumerate(options):
+    ttk.Button(prop_frame, text=option, command=lambda i=i: choose_prop(str(i + 1))).pack(fill="x", pady=2)
+
+speech_frame = ttk.LabelFrame(main_frame, text="Speech Bubble Text", padding="10")
+speech_frame.pack(fill="both", expand=True, pady=5)
+text_entry = ttk.Entry(speech_frame)
+text_entry.pack(fill="x")
+
+ttk.Button(main_frame, text="Start Photobooth", command=start_photobooth).pack(pady=10)
+ttk.Button(main_frame, text="Quit", command=on_quit).pack(pady=5)
+
+root.mainloop()
