@@ -35,8 +35,8 @@ def on_quit():
 
 root = tk.Tk()
 root.title("Photobooth Menu")
-root.geometry("2000x2000")
-root.resizable(True, True)
+root.geometry("800x1000")
+root.resizable(False, False)
 
 camera = tk.IntVar(value=0)
 debug = tk.IntVar(value=0)
